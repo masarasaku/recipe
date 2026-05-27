@@ -40,7 +40,7 @@ def index(request):
         seasonings_str = ", ".join(selected_seasonings) if selected_seasonings else "なし（水・油のみ使用可）"
         
         # Gemini API の呼び出し処理
-        client = genai.Client() 
+        model = genai.GenerativeModel()
         
         # 🔥 プロンプトを調整：詳細手順と区切り文字を追加
         prompt = f"""
