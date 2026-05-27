@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <!-- ドキュメントの文字エンコーディングを設定 -->
+    <meta charset="UTF-8">
+    <!-- 画面のタイトルを設定 -->
+    <title>メッセージ表示</title>
+    <!-- 画面のスタイルを定義-->
+    <style>
+        .message {
+            list-style: none; 
+            padding: 0;
+        }
+        .message li {
+            margin: 5px 0; 
+            padding: 10px; 
+            border-radius: 3px; 
+        }
+        .debug{
+            background-color: lightgray;
+        }
+        .info {
+            background-color: lightblue;
+        }
+        .success {
+            background-color: lightgreen;
+        }
+        .warning {
+            background-color: yellow;
+        }
+        .error {
+            background-color: lightcoral;
+        }
+    </style>
+</head>
+<body>
+    <!-- 画面のヘッダー -->
+    <h1>メッセージ一の表示</h1>
+    <!-- メッセージが存在する場合に表示するブロック -->
+    {% if messages %}
+        <!-- メッセージリストを表示-->
+        <ul class="message">
+            <!-- 各メッセージをリスト項目としてループして表示 -->
+            {% for message in messages %}
+                <!-- メッセージのタイプに応じたクラスを適用し、メッセージを表示 -->
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>

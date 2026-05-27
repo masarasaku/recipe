@@ -1,0 +1,87 @@
+{% extends 'recipeapp/base.html' %}
+
+{% block content %}
+    <div class="container py-5" style="max-width: 700px;">
+        <div class="card shadow-sm p-4 bg-white rounded mb-4">
+            <label for="ingredients" class="form-label text-secondary small fw-bold mb-2">🍳 AI献立提案アプリ</label>
+            
+            <form id="re-recipe-form" method="POST">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="text" id="ingredients" name="ingredients" class="form-control" value="{{ ingredients }}" placeholder="例: 豚肉, キャベツ, 玉ねぎ" required>
+                    <button type="submit" id="re-submit-btn" class="btn btn-success">再提案を求める</button>
+                </div>
+            </form>
+        </div>
+
+        {% if result %}
+        <div class="card shadow rounded border-0 animate-fade-in">
+            <div class="card-header bg-success text-white py-3">
+                <h2 class="fs-5 mb-0 fw-bold">✨ AIからの提案レシピ</h2>
+            </div>
+            <div class="card-body p-4 bg-white">
+                <div class="p-4 bg-light rounded text-dark fs-5 text-start" style="white-space: pre-wrap; line-height: 1.8;">
+                    {{ result }}
+                </div>
+
+                {% if detailed_steps %}
+                <div class="mt-4">
+                    <details class="w-100">
+                        <summary class="btn btn-outline-success w-100 fw-bold py-2 shadow-sm text-center" style="list-style: none; cursor: pointer;">
+                            🍳 火加減やコツなど、くわしい作り方を見る ▼
+                        </summary>
+        
+                        <div class="p-4 mt-2 bg-white text-dark fs-5 text-start" style="white-space: pre-wrap; line-height: 1.8; border: 2px dashed #198754; border-radius: 8px;">
+                            {{ detailed_steps }}
+                        </div>
+                    </details>
+                </div>
+                <style>
+                    summary::-webkit-details-marker { display: none; }
+                </style>
+                {% endif %}
+
+            </div>    
+            <div class="card-footer bg-white text-end py-3">
+                <a href="/recipe/" class="btn btn-outline-secondary">トップに戻る</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255,255,255,0.95); z-index: 99999; justify-content: center; align-items: center; flex-direction: column;">
+        <div class="spinner-border text-success" role="status" style="width: 3rem; height: 3rem;"></div>
+        <p class="mt-3 fs-5 text-dark fw-bold">⏳ AIが新しい献立を考案中...</p>
+        <p class="text-muted small">10秒ほどかかります。画面を閉じずにお待ちください。</p>
+    </div>
+
+    <script>
+    const reRecipeForm = document.getElementById('re-recipe-form');
+    const ingredientsInput = document.getElementById('ingredients');
+    const reSubmitBtn = document.getElementById('re-submit-btn');
+    const loadingOverlay = document.getElementById('loading-overlay');
+
+    // ボタンの有効・無効を切り替える共通関数
+    function toggleSubmitButton() {
+        const trimmedValue = ingredientsInput.value.trim();
+        if (trimmedValue.length > 0) {
+            reSubmitBtn.disabled = false;
+        } else {
+            reSubmitBtn.disabled = true;
+        }
+    }
+
+    // 1. ページ読み込み時に初期状態をチェック
+    toggleSubmitButton();
+
+    // 2. 食材の入力状態をリアルタイムで監視
+    ingredientsInput.addEventListener('input', toggleSubmitButton);
+
+    // 3. フォーム送信時の処理（ローディング表示）
+    reRecipeForm.addEventListener('submit', function(e) {
+        if (!reSubmitBtn.disabled) {
+            loadingOverlay.style.display = 'flex';
+        }
+    });
+    </script>
+{% endblock %}
