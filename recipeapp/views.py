@@ -1,6 +1,6 @@
 # recipeapp/views.py
 from django.shortcuts import render
-from google import genai
+from google import geogle.generativeai as genai
 from .models import UserSeasoning
 
 def index(request):
