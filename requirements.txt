@@ -2,3 +2,5 @@ Django
 gunicorn
 whitenoise
 google-generativeai
+psycopg2-binary
+dj-database-url
