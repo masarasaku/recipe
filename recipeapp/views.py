@@ -1,7 +1,11 @@
 # recipeapp/views.py
 from django.shortcuts import render
 import google.generativeai as genai
+import os
 from .models import UserSeasoning
+
+API_KEY = os.environ.get('GEMINI_API_KEY')  # 環境変数からAPIキーを取得
+genai.configure(api_key=API_KEY)
 
 def index(request):
     # --- 1. 初期表示（GET）のときにDBから調味料を取得 ---
