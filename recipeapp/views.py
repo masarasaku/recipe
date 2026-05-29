@@ -40,7 +40,7 @@ def index(request):
         seasonings_str = ", ".join(selected_seasonings) if selected_seasonings else "なし（水・油のみ使用可）"
         
         # Gemini API の呼び出し処理
-        model = genai.GenerativeModel()
+        model = genai.GenerativeModel("gemini-2.5-flash")
         
         # 🔥 プロンプトを調整：詳細手順と区切り文字を追加
         prompt = f"""
@@ -84,10 +84,7 @@ def index(request):
 [タレの煮詰め具合、盛り付けのコツなど、完成までの流れを具体的に説明してください]
 """
         
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt,
-        )
+        response = model.generate_content(prompt)
         
         # 🔥 レスポンスを区切り文字「===詳細手順===」で分割する処理を追加
         ai_response = response.text
