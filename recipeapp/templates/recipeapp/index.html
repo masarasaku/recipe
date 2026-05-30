@@ -89,6 +89,38 @@
     const ingredientsInput = document.getElementById('ingredients');
     const submitBtn = document.getElementById('submit-btn');
     const loadingOverlay = document.getElementById('loading-overlay');
+    const otherSeasoningsInput = document.getElementById('other_seasonings');
+
+    // --- ここから追加：LocalStorageを使った自動保存と復元 ---
+    document.addEventListener("DOMContentLoaded", () => {
+        const checkboxes = document.querySelectorAll('input[name="seasonings"]');
+        
+        // 1. チェックボックスの状態を復元
+        checkboxes.forEach((cb) => {
+            const isChecked = localStorage.getItem(`seasoning_${cb.value}`);
+            if (isChecked !== null) {
+                cb.checked = isChecked === "true";
+            }
+            
+            // 変更されたら即保存
+            cb.addEventListener("change", () => {
+                localStorage.setItem(`seasoning_${cb.value}`, cb.checked);
+            });
+        });
+
+        // 2. 「その他」のテキスト入力を復元
+        const savedOther = localStorage.getItem("other_seasonings_text");
+        if (savedOther !== null && !otherSeasoningsInput.value) { 
+            // Django側から値が渡ってきていない場合のみLocalstorageから復元
+            otherSeasoningsInput.value = savedOther;
+        }
+        
+        // 入力されたら即保存
+        otherSeasoningsInput.addEventListener("input", () => {
+            localStorage.setItem("other_seasonings_text", otherSeasoningsInput.value);
+        });
+    });
+    // --- ここまで ---
 
     // 1. 食材の入力状態を監視してボタンの有効・無効を切り替える
     ingredientsInput.addEventListener('input', function() {
